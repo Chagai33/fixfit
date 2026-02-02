@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../api/firebaseConfig";
 import { useAuth } from "../contexts/AuthContext";
@@ -16,6 +16,8 @@ export interface Workout {
   traineeId: string;
   traineeName: string;
   exercises: Exercise[];
+  status?: string;
+  lastUpdated?: any;
 }
 
 export const useWorkouts = () => {

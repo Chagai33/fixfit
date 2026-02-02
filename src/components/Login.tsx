@@ -1,174 +1,117 @@
-import { useState } from "react";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  type AuthError
-} from "firebase/auth";
-import { doc, setDoc, updateDoc, collection, query, where, getDocs, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "../api/firebaseConfig";
+import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import { ArrowRight, Compass, ShieldCheck } from 'lucide-react';
+import i18n from '../i18n';
+import { Button, Input } from './ui-kit';
 
 export const Login = () => {
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
-
+    setIsLoading(true);
+    setError(null);
     try {
-      if (isRegistering) {
-        // Registration Logic
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // Update Auth Profile
-        await updateProfile(user, { displayName });
-
-        // Determine role
-        const isAdmin = email === "fixfit10@gmail.com" || email === "chagai33@gmail.com";
-        const role = isAdmin ? "admin" : "trainee";
-
-        // Create User Document in Firestore
-        await setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
-          email: user.email,
-          displayName: displayName,
-          role: role,
-          createdAt: serverTimestamp(),
-        });
-
-        // Link existing workouts (from migration) to this new UID
-        try {
-          const workoutsRef = collection(db, "workouts");
-          const q = query(workoutsRef, where("traineeName", "==", displayName));
-          const querySnapshot = await getDocs(q);
-
-          const updatePromises = querySnapshot.docs.map(workoutDoc =>
-            updateDoc(workoutDoc.ref, { traineeId: user.uid })
-          );
-          await Promise.all(updatePromises);
-          console.log(`Linked ${updatePromises.length} workouts to user ${user.uid}`);
-        } catch (linkErr) {
-          console.error("Error linking workouts:", linkErr);
-        }
-      } else {
-        // Login Logic
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-    } catch (err) {
-      const firebaseError = err as AuthError;
-      console.error(firebaseError);
-
-      // Friendly Error Messages
-      let msg = "שגיאה כללית. נסה שוב מאוחר יותר.";
-      if (firebaseError.code === "auth/invalid-credential" || firebaseError.code === "auth/user-not-found") {
-        msg = "פרטים שגויים. אנא בדוק את האימייל והסיסמה.";
-      } else if (firebaseError.code === "auth/email-already-in-use") {
-        msg = "האימייל הזה כבר רשום במערכת.";
-      } else if (firebaseError.code === "auth/weak-password") {
-        msg = "הסיסמה חלשה מדי (לפחות 6 תווים).";
-      }
-      setError(msg);
+      await login(email, password);
+    } catch (err: any) {
+      setError(err.message || t('login.identity_error'));
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4" dir="rtl">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-        {/* Header Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center text-white">
-          <h1 className="text-3xl font-bold mb-2">FixFit</h1>
-          <p className="text-blue-100 text-sm">המקום שלך לצמיחה וכושר</p>
-        </div>
+    <main className="min-h-screen bg-background flex flex-col lg:flex-row text-primary font-sans" dir={i18n.dir()} role="main">
 
-        {/* Form Section */}
-        <div className="p-8">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-            {isRegistering ? "יצירת חשבון חדש" : "כניסה למערכת"}
-          </h2>
+      {/* --- Visual Anchor --- */}
+      <section className="lg:w-[45%] relative h-[40vh] lg:h-screen bg-surface-bg flex flex-col justify-center p-12 md:p-24 overflow-hidden border-r border-border-standard">
+        <div className="relative z-20 space-y-12">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            <p className="text-[10px] font-bold tracking-[0.5em] uppercase text-primary/30">{t('login.subtitle')}</p>
+            <h1 className="text-7xl md:text-9xl text-primary leading-[0.85] font-black lowercase tracking-tighter">
+              {t('login.title').split('.')[0]}<span className="text-action">.</span>
+            </h1>
+          </motion.div>
 
-          {error && (
-            <div className="mb-6 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 text-center">
-              {error}
+          <div className="flex items-center gap-6 pt-12 border-t border-border-standard">
+            <div className="w-12 h-12 rounded-full border border-border-standard flex items-center justify-center">
+              <Compass className="text-action/40" size={20} />
             </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {isRegistering && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שם מלא</label>
-                <input
-                  type="text"
-                  required
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                  placeholder="ישראל ישראלי"
-                />
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">אימייל</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                placeholder="your@email.com"
-                dir="ltr"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">סיסמה</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                placeholder="••••••••"
-                dir="ltr"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all
-                ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"}`}
-            >
-              {loading ? "מעבד נתונים..." : (isRegistering ? "הירשם" : "התחבר")}
-            </button>
-          </form>
-
-          {/* Toggle Switch */}
-          <div className="mt-6 text-center pt-4 border-t border-gray-100">
-            <p className="text-sm text-gray-600">
-              {isRegistering ? "כבר יש לך חשבון?" : "אין לך עדיין חשבון?"}
-              <button
-                onClick={() => {
-                  setIsRegistering(!isRegistering);
-                  setError("");
-                }}
-                className="mr-2 text-blue-600 font-bold hover:underline focus:outline-none"
-              >
-                {isRegistering ? "התחבר כאן" : "הירשם עכשיו"}
-              </button>
+            <p className="text-xs font-light text-primary/40 leading-relaxed max-w-xs">
+              {t('login.description')}
             </p>
           </div>
         </div>
-      </div>
-    </div>
+        <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-primary/[0.02] rotate-12 rounded-[4rem]"></div>
+      </section>
+
+      {/* --- Authentication Portal --- */}
+      <section className="lg:w-[55%] flex flex-col justify-center p-8 md:p-32 bg-background">
+        <div className="max-w-md w-full mx-auto space-y-20">
+          <header className="space-y-4">
+            <h2 className="text-5xl font-extrabold tracking-tighter lowercase">{t('login.verify')}</h2>
+            <p className="text-[10px] text-primary/30 tracking-widest uppercase">{t('login.portal_label')}</p>
+          </header>
+
+          <form onSubmit={handleSubmit} className="space-y-12" aria-label="Identity Authentication">
+            <div className="space-y-10">
+              <Input
+                label={t('login.email_label')}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="email@foundry.com"
+                required
+                autoComplete="email"
+              />
+              <Input
+                label={t('login.password_label')}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                autoComplete="current-password"
+              />
+            </div>
+
+            {error && (
+              <div className="p-4 bg-error/5 border border-error/10 text-[10px] font-bold uppercase tracking-widest text-error flex items-center gap-3" role="alert">
+                <ShieldCheck size={14} />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              className="w-full h-20"
+              aria-label={t('login.submit')}
+            >
+              {isLoading ? t('login.verifying') : t('login.submit')}
+              <ArrowRight size={16} className="ml-4" />
+            </Button>
+          </form>
+
+          <footer className="pt-24 flex justify-between items-center opacity-20 text-[8px] font-mono tracking-widest">
+            <span>FOUNDRY_SYS_V2.0</span>
+            <span>{t('login.footer_authenticated')}</span>
+          </footer>
+        </div>
+      </section>
+    </main>
   );
 };
+
+export default Login;

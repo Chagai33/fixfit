@@ -1,0 +1,75 @@
+{
+  "common": {
+    "loading": "syncing identity...",
+    "error": "operational error",
+    "logout": "logout",
+    "back": "back",
+    "save": "save",
+    "cancel": "cancel"
+  },
+  "dashboard": {
+    "title": "foundry.",
+    "subtitle": "Daily Operations",
+    "overview": "Overview",
+    "athletes": "Athletes",
+    "protocols": "Protocols",
+    "laboratory": "Laboratory",
+    "stats": {
+      "trainees": "Total Active Units",
+      "trainees_label": "Athletes",
+      "active_protocols": "Operational Protocols",
+      "active_label": "Active",
+      "efficiency": "Efficiency Score",
+      "growth": "Positive Growth Drift"
+    },
+    "roster": {
+      "title": "Athletic Roster.",
+      "subtitle": "Curate and manage elite performance protocols",
+      "search_placeholder": "IDENTIFY_DNA...",
+      "load_phase": "Load Phase",
+      "mvmt": "MVMT.",
+      "trainee": "Athlete"
+    }
+  },
+  "login": {
+    "title": "Peak Presence.",
+    "subtitle": "BOUTIQUE_INTELLIGENCE",
+    "description": "A curated fitness experience focused on clarity and performance. Identity verification required to access the Zenith portal.",
+    "verify": "Verify Identity.",
+    "portal_label": "Secure Command Portal",
+    "email_label": "Credential Identifier",
+    "password_label": "Security Keycode",
+    "submit": "Initialize Access",
+    "verifying": "Verifying...",
+    "footer_authenticated": "AUTHENTICATED_ONLY"
+  },
+  "schedule": {
+    "title": "Schedule Overview.",
+    "subtitle": "Daily Operations",
+    "add_session": "Add Session",
+    "next_sessions": "Next Sessions",
+    "book_spot": "Book Spot",
+    "waitlist_full": "Waitlist Full",
+    "trainer": "Trainer",
+    "class": "Class",
+    "time": "Time",
+    "status": "Status"
+  },
+  "workout": {
+    "abort_protocol": "Abort Protocol",
+    "sync_status": "Live Synchronization",
+    "phase_id": "Operational Phase Identification",
+    "movements": "Movements",
+    "intensity": "Intensity",
+    "completion": "Protocol Completion",
+    "matrix": "Execution Matrix",
+    "module": "Module",
+    "synced": "Synced",
+    "sets": "Sets",
+    "reps": "Reps",
+    "load_weight": "Load/Kg",
+    "finalize": "Finalize Mission Data",
+    "commit": "Commit Performance Metrics",
+    "high": "High"
+  }
+}

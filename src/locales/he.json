@@ -1,0 +1,75 @@
+{
+  "common": {
+    "loading": "מסנכרן זהות...",
+    "error": "שגיאה תפעולית",
+    "logout": "התנתקות",
+    "back": "חזרה",
+    "save": "שמירה",
+    "cancel": "ביטול"
+  },
+  "dashboard": {
+    "title": "foundry.",
+    "subtitle": "פעילות יומית",
+    "overview": "סקירה",
+    "athletes": "מתאמנים",
+    "protocols": "פרוטוקולים",
+    "laboratory": "מעבדה",
+    "stats": {
+      "trainees": "יחידות פעילות",
+      "trainees_label": "מתאמנים",
+      "active_protocols": "פרוטוקולים מבצעיים",
+      "active_label": "פעיל",
+      "efficiency": "מדד יעילות",
+      "growth": "מגמת צמיחה חיובית"
+    },
+    "roster": {
+      "title": "רשימת מתאמנים.",
+      "subtitle": "ניהול פרוטוקולי ביצועים עילית",
+      "search_placeholder": "זיהוי DNA...",
+      "load_phase": "שלב עומס",
+      "mvmt": "תנועות",
+      "trainee": "מתאמן"
+    }
+  },
+  "login": {
+    "title": "נוכחות שיא.",
+    "subtitle": "BOUTIQUE_INTELLIGENCE",
+    "description": "חווית כושר אצורה המתמקדת בבהירות וביצועים. נדרש אימות זהות כדי לגשת לפורטל.",
+    "verify": "אימות זהות.",
+    "portal_label": "פורטל פיקוד מאובטח",
+    "email_label": "מזהה משתמש",
+    "password_label": "קוד אבטחה",
+    "submit": "אתחול גישה",
+    "verifying": "מבצע אימות...",
+    "footer_authenticated": "מורשים_בלבד"
+  },
+  "schedule": {
+    "title": "סקירת לו\"ז.",
+    "subtitle": "פעילות יומית",
+    "add_session": "הוספת אימון",
+    "next_sessions": "אימונים קרובים",
+    "book_spot": "הזמנת מקום",
+    "waitlist_full": "רשימת המתנה מלאה",
+    "trainer": "מאמן",
+    "class": "אימון",
+    "time": "שעה",
+    "status": "סטטוס"
+  },
+  "workout": {
+    "abort_protocol": "ביטול אימון",
+    "sync_status": "סנכרון בזמן אמת",
+    "phase_id": "זיהוי שלב מבצעי",
+    "movements": "תנועות",
+    "intensity": "עצימות",
+    "completion": "השלמת פרוטוקול",
+    "matrix": "מטריצת ביצוע",
+    "module": "מודול",
+    "synced": "סונכרן",
+    "sets": "סטים",
+    "reps": "חזרות",
+    "load_weight": "משקל/ק\"ג",
+    "finalize": "סיום ושמירת נתונים",
+    "commit": "אישור מדדי ביצוע",
+    "high": "גבוהה"
+  }
+}
