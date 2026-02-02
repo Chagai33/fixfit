@@ -31,5 +31,11 @@ dist-ssr/
 # Production
 build/
 
+# Local Data & Secrets
+data/
+*.xlsx
+service-account.json
+.env*.local
+
 # Gemini
 .gemini/
