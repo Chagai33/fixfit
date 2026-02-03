@@ -25,7 +25,7 @@ const TVDisplayTab = () => {
       
       // Initialize completed sets
       const map = new Map();
-      data.forEach(w => {
+      data.forEach((w: any) => {
         map.set(w.id, new Set(w.completedIndices || []));
       });
       setCompletedMap(map);

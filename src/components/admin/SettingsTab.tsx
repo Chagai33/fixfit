@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, updateDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "../../api/firebaseConfig";
-import { Shield, ShieldCheck, Crown } from "lucide-react";
+import { Shield, Crown } from "lucide-react";
 
 const SettingsTab = () => {
   const [users, setUsers] = useState<any[]>([]);

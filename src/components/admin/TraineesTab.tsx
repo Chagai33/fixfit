@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, addDoc, deleteDoc, doc, getDocs, serverTimestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db, auth } from "../../api/firebaseConfig";
-import { Plus, Trash2, User, Mail, Calendar } from "lucide-react";
+import { Plus, Trash2, Mail } from "lucide-react";
 
 const TraineesTab = () => {
   const [trainees, setTrainees] = useState<any[]>([]);
