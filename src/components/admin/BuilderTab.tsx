@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, addDoc, getDocs, serverTimestamp, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../api/firebaseConfig";
-import { Plus, Trash2, GripVertical, Dumbbell, Check, Sparkles } from "lucide-react";
+import { Trash2, GripVertical, Dumbbell, Check, Sparkles } from "lucide-react";
 
 const BuilderTab = () => {
   const [trainees, setTrainees] = useState<any[]>([]);
