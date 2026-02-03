@@ -5,9 +5,14 @@ import { useAuth } from "../contexts/AuthContext";
 
 export interface Exercise {
   name: string;
+  altName?: string;        // שם חלופי/קצר לתצוגה (עמודה G)
   sets: string;
   reps: string;
   weight: string;
+  isSuperSet?: boolean;    // האם זה סופר-סט (מזוהה ע"י +)
+  superSetExercises?: string[]; // רשימת תרגילים בסופר-סט
+  isCompleted?: boolean;
+  order?: number;
 }
 
 export interface Workout {

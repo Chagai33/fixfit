@@ -89,6 +89,7 @@ async function migrateExcel() {
           email,
           displayName: traineeName,
           role: role,
+          traineeSheetName: traineeName, // Original sheet name for reference
           updatedAt: admin.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
 
@@ -119,7 +120,12 @@ async function migrateExcel() {
         }
         uid = user.uid;
         await db.collection('users').doc(uid).set({
-          uid, email, displayName: sheetName, role: 'trainee', createdAt: admin.firestore.FieldValue.serverTimestamp()
+          uid, 
+          email, 
+          displayName: sheetName, 
+          traineeSheetName: sheetName, // Original sheet name
+          role: 'trainee', 
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
         userMap.set(sheetName, uid);
       } catch (err) {
@@ -138,10 +144,22 @@ async function migrateExcel() {
       const type = cleanString(row['B']); // Title/Type of workout (e.g. "אימון A")
       const name = cleanString(row['C']); // Exercise name
       const sets = cleanString(row['D']);
-      const reps = cleanString(row['E']);
+      let reps = cleanString(row['E']);
       const weight = cleanString(row['F']);
+      const altName = cleanString(row['G']); // Alternative/Display name
 
       if (!type || !name) continue;
+
+      // Fix: Filter out Excel date values in reps column (values > 1000)
+      if (!isNaN(Number(reps)) && Number(reps) > 1000) {
+        reps = '8-12'; // Default value for corrupted data
+      }
+
+      // Detect super-sets (exercises with '+')
+      const isSuperSet = name.includes('+');
+      const superSetExercises = isSuperSet 
+        ? name.split('+').map(ex => ex.trim()) 
+        : undefined;
 
       if (!workoutsByType.has(type)) {
         workoutsByType.set(type, []);
@@ -149,9 +167,12 @@ async function migrateExcel() {
 
       workoutsByType.get(type).push({
         name,
+        altName: altName || undefined,
         sets,
         reps,
         weight,
+        isSuperSet,
+        superSetExercises,
         isCompleted: false,
         order: workoutsByType.get(type).length
       });

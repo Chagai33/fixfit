@@ -1,6 +1,6 @@
 
 import XLSX from 'xlsx';
-const workbook = XLSX.readFile('data/data.xlsx');
+const workbook = XLSX.readFile('public/data/data.xlsx');
 const usersSheet = workbook.Sheets['Users'];
 if (!usersSheet) {
   console.log('Users sheet not found');

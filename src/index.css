@@ -1,86 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
 
-@theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-
-  /* Multi-tenant Theme Variables */
-  --color-primary: var(--brand-primary, #111111);
-  /* Deep Slate Default */
-  --color-action: var(--brand-action, #2563EB);
-  /* Indigo Default - 4.5:1 min contrast */
-  --color-success: #059669;
-  --color-error: #DC2626;
-
-  --color-background: #FFFFFF;
-  --color-surface-soft: #F9FAFB;
-  --color-surface-mid: #F3F4F6;
-  --color-border-standard: #E5E7EB;
-  --color-border-strong: #D1D5DB;
-
-  --shadow-none: none;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-:root {
-  --brand-primary: #111111;
-  --brand-action: #2563EB;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
-  html {
-    @apply scroll-smooth transition-colors duration-300;
-    background-color: var(--color-background);
-    -webkit-tap-highlight-color: transparent;
+  :root {
+    --border: 226 232 240; /* slate-200 */
   }
-
+  
+  * {
+    @apply border-border;
+  }
+  
   body {
-    @apply font-sans bg-background text-primary antialiased selection:bg-action/10;
+    @apply bg-white text-slate-900 antialiased;
+    font-family: 'Rubik', 'Inter', -apple-system, sans-serif;
   }
-
-  /* Accessibility Focused Focus States */
-  :focus-visible {
-    @apply outline-none ring-2 ring-action ring-offset-2 ring-offset-background transition-shadow;
+  
+  html {
+    scroll-behavior: smooth;
   }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    @apply text-primary font-bold tracking-tight lowercase appearance-none;
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
-}
-
-@layer components {
-
-  /* Foundry Structural Elements */
-  .foundry-card {
-    @apply bg-white border border-border-standard p-6 transition-colors hover:bg-surface-soft;
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100;
   }
-
-  .foundry-grid-header {
-    @apply text-[11px] font-bold text-gray-400 uppercase tracking-widest border-b border-border-standard pb-4 mb-4;
-  }
-
-  .btn-primary {
-    @apply bg-primary text-white text-[11px] font-bold uppercase tracking-widest px-8 py-3 transition-all hover:bg-action;
-  }
-
-  .foundry-label {
-    @apply text-[10px] font-bold text-gray-400 uppercase tracking-tighter;
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full hover:bg-slate-400;
   }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-surface-mid;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-300;
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

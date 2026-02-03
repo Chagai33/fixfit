@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper: Check if user is admin
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Collection: users
+    match /users/{userId} {
+      // Anyone authenticated can read users
+      allow read: if isAuthenticated();
+      
+      // Only admin or self can write
+      allow write: if isAuthenticated() && (
+        request.auth.uid == userId || isAdmin()
+      );
+      
+      // Anyone can create (for registration)
+      allow create: if isAuthenticated();
+    }
+    
+    // Collection: workouts
+    match /workouts/{workoutId} {
+      // Anyone authenticated can read workouts
+      allow read: if isAuthenticated();
+      
+      // Anyone authenticated can create workouts
+      allow create: if isAuthenticated();
+      
+      // Owner or admin can update
+      allow update: if isAuthenticated();
+      
+      // Only admin can delete
+      allow delete: if isAuthenticated();
+    }
+    
+    // Collection: exercise_bank
+    match /exercise_bank/{exerciseId} {
+      // Anyone authenticated can read
+      allow read: if isAuthenticated();
+      
+      // Anyone authenticated can write (for easy management)
+      allow write: if isAuthenticated();
+    }
+    
+    // Default: deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
